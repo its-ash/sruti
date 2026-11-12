@@ -1,0 +1,11 @@
+{
+  "id": "sruti",
+  "name": "Sruti",
+  "repo": "its-ash/sruti",
+  "package": "com.itsash.sruti",
+  "tagline": "Guitar and Indian classical tuner with a tanpura drone. Works offline.",
+  "description": "Sruti is an instrument tuner and sruti box. Tune a guitar, bass or ukulele in many tunings, read any note in chromatic mode, or sing and play against your own Sa and see the swara (Sa Re Ga Ma Pa Dha Ni, komal and tivra, mandra and taar) with the deviation in cents. A synthesized tanpura drone plays Pa, Ma or Ni with Sa, or a steady sruti, tuned to your Sa. Everything runs on your phone, with no ads and no tracking.",
+  "category": "Tools",
+  "icon": "assets/icon/logo-1024.png",
+  "homepage": "https://sruti.itsash.in/"
+}
