@@ -36,10 +36,15 @@ class DroneEngine {
             .setBufferSizeInBytes(pcm.size)
             .setTransferMode(AudioTrack.MODE_STATIC)
             .build()
-        t.write(pcm, 0, pcm.size)
-        t.setLoopPoints(0, pcm.size / 2, -1)
-        t.setVolume(volume)
-        t.play()
+        try {
+            t.write(pcm, 0, pcm.size)
+            t.setLoopPoints(0, pcm.size / 2, -1)
+            t.setVolume(volume)
+            t.play()
+        } catch (e: RuntimeException) {
+            runCatching { t.release() }
+            throw e
+        }
         track = t
     }
 

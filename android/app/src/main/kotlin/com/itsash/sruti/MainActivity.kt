@@ -16,12 +16,13 @@ import io.flutter.plugin.common.MethodChannel
  */
 class MainActivity : FlutterActivity() {
     private val drone = DroneEngine()
+    private val mic = MicStreamHandler()
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val messenger = flutterEngine.dartExecutor.binaryMessenger
 
-        EventChannel(messenger, "$CHANNEL/mic").setStreamHandler(MicStreamHandler())
+        EventChannel(messenger, "$CHANNEL/mic").setStreamHandler(mic)
 
         MethodChannel(messenger, "$CHANNEL/drone").setMethodCallHandler { call, result ->
             when (call.method) {
@@ -31,8 +32,12 @@ class MainActivity : FlutterActivity() {
                     if (pcm == null) {
                         result.error("bad_args", "pcm is missing", null)
                     } else {
-                        drone.play(pcm, rate)
-                        result.success(null)
+                        try {
+                            drone.play(pcm, rate)
+                            result.success(null)
+                        } catch (e: RuntimeException) {
+                            result.error("audio_out", e.message, null)
+                        }
                     }
                 }
                 "volume" -> {
@@ -57,6 +62,7 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun onDestroy() {
+        mic.stop()
         drone.stop()
         super.onDestroy()
     }

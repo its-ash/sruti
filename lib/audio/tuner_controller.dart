@@ -32,6 +32,7 @@ class TunerController extends ChangeNotifier {
   StreamSubscription<Uint8List>? _sub;
   int _chunks = 0;
   int _filled = 0;
+  int _gen = 0;
   bool _disposed = false;
 
   TunerState state = TunerState.idle;
@@ -47,9 +48,10 @@ class TunerController extends ChangeNotifier {
   /// Asks for the microphone and starts listening. Safe to call repeatedly.
   Future<void> start() async {
     if (_sub != null || state == TunerState.starting) return;
+    final gen = ++_gen;
     _set(TunerState.starting);
     final status = await _requestPermission();
-    if (_disposed) return;
+    if (_disposed || gen != _gen || state != TunerState.starting) return;
     if (!status.isGranted) {
       _set(status.isPermanentlyDenied ? TunerState.deniedForever : TunerState.denied);
       return;
@@ -67,6 +69,7 @@ class TunerController extends ChangeNotifier {
 
   /// Releases the microphone.
   void stop() {
+    _gen++;
     _sub?.cancel();
     _sub = null;
     if (state == TunerState.running || state == TunerState.starting) state = TunerState.idle;
@@ -113,6 +116,7 @@ class TunerController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _gen++;
     _sub?.cancel();
     super.dispose();
   }

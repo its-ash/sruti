@@ -57,6 +57,7 @@ class SettingsScreen extends StatelessWidget {
                       'never recorded or sent. Sruti uses the internet only to check for app updates.',
                   icon: Icons.lock_rounded,
                   iconStatus: UiStatus.success,
+                  maxSubtitleLines: 5,
                 ),
               ],
             ),
